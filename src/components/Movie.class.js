@@ -1,7 +1,22 @@
 import React, { Component } from 'react';
-import {Card, CardHeader, CardMedia, CardContent, Typography} from '@material-ui/core';
+import {
+    Card, 
+    CardHeader, 
+    CardMedia, 
+    CardContent, 
+    Typography, 
+    CardActions,
+    TextField
+} from '@material-ui/core';
 
 class MovieComponent extends Component {
+    state = {
+        comment: '',
+    }
+
+    onChangeHandler = ({ target: { value }}) => 
+        this.setState({ comment: value })
+
     render() {
         const {
             movie: {
@@ -12,6 +27,7 @@ class MovieComponent extends Component {
                 poster,
             }
         } = this.props;
+        const { comment } = this.state;
         return (
             <Card>
                 <CardHeader 
@@ -28,6 +44,19 @@ class MovieComponent extends Component {
                         {plot}
                     </Typography>
                 </CardContent>
+                {comment && comment.length > 0 && 
+                    <CardContent>
+                        Your Comment: {comment}
+                    </CardContent>
+                }
+                <CardActions>
+                    <TextField 
+                        fullWidth
+                        label="Comment"
+                        value={comment}
+                        onChange={this.onChangeHandler}
+                    />
+                </CardActions>
             </Card>
         );
     }
