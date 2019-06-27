@@ -5,9 +5,8 @@ import {
     CardMedia, 
     CardContent, 
     Typography, 
-    CardActions,
-    TextField
 } from '@material-ui/core';
+import CommentForm from './Comment';
 
 const MovieComponent = ({
     movie: {
@@ -35,19 +34,12 @@ const MovieComponent = ({
                     {plot}
                 </Typography>
             </CardContent>
-                {comment && comment.length > 0 && 
-                    <CardContent>
-                        Your Comment: {comment}
-                    </CardContent>
-                }
-                <CardActions>
-                    <TextField 
-                        fullWidth
-                        label="Comment"
-                        value={comment}
-                        onChange={({ target: { value }}) => setComment(value)}
-                    />
-                </CardActions>
+            {comment && comment.length > 0 && 
+                <CardContent>
+                    Your Comment: {comment}
+                </CardContent>
+            }
+            <CommentForm comment={comment} onSave={setComment} />
         </Card>
     );
 };
