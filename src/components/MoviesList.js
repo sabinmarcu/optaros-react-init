@@ -7,9 +7,11 @@ class MoviesList extends Component {
     render() {
         return (
             <div className={styles.list}>
-                {movies.map(movie => <div className={styles.movie}>
-                    <MovieComponent movie={movie} />
-                </div>)}
+                {movies.map(({ id, ...rest }) => 
+                    <div className={styles.movie} key={id}>
+                        <MovieComponent movie={{ id, ...rest }} />
+                    </div>
+                )}
             </div>
         )
     }
