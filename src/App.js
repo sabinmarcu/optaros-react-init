@@ -2,7 +2,7 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Movie from './components/Movie';
+import MoviesList from './components/MoviesList';
 
 const App = () => (
   <div className="app">
@@ -13,7 +13,7 @@ const App = () => (
         </Typography>
       </Toolbar>
     </AppBar>
-    <Movie />
+    <MoviesList />
   </div>
 );
 
