@@ -7,6 +7,7 @@ import {
     Typography, 
 } from '@material-ui/core';
 import CommentForm from './Comment';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const MovieComponent = ({
     movie: {
@@ -15,9 +16,10 @@ const MovieComponent = ({
         genre,
         plot,
         poster,
+        id,
     }
 }) => {
-    const [comment, setComment] = useState('');
+    const [comment, setComment] = useLocalStorage(id, '');
     return (
         <Card>
             <CardHeader 
@@ -39,7 +41,7 @@ const MovieComponent = ({
                     Your Comment: {comment}
                 </CardContent>
             }
-            <CommentForm comment={comment} onSave={setComment} />
+            <CommentForm id={id} comment={comment} onSave={setComment} />
         </Card>
     );
 };
