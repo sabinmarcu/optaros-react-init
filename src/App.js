@@ -2,6 +2,7 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import MoviesList from './components/MovieList';
 
 const App = () => (
   <div className="app">
@@ -12,6 +13,7 @@ const App = () => (
         </Typography>
       </Toolbar>
     </AppBar>
+    <MoviesList />
   </div>
 );
 

@@ -1,0 +1,11 @@
+.list {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.movie {
+  flex: 1;
+  max-width: 500px;
+  min-width: 300px;
+  margin: 25px 15px 0px;
+}
