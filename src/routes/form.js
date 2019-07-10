@@ -15,10 +15,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Actions, Selectors } from '../redux/movies';
 
 const useForm = (initData = {}) => {
-    const [title, titleIsValid, setTitle] = useField(initData.title, value => value.trim().split(' ').length >= 3);
+    const [title, titleIsValid, setTitle] = useField(initData.title);
     const [year, yearIsValid, setYear] = useField(initData.year, value => /^[0-9]+$/.test(value));
     const [genre, genreIsValid, setGenre] = useField(initData.genre);
-    const [plot, plotIsValid, setPlot] = useField(initData.plot);
+    const [plot, plotIsValid, setPlot] = useField(initData.plot, value => value.trim().split(' ').length >= 10);
     const [poster, posterIsValid, setPoster] = useField(initData.poster);
     const [isPartialValid, setIsPartialValid] = useState(false);
     const [isValid, setIsValid] = useState(false); 
@@ -136,7 +136,7 @@ const MovieForm = ({
                     </Button>
                 </CardActions>}
             </Card>
-            {isPartialValid && <MovieComponent {...{title, year, genre, plot, poster}} />}
+            {isPartialValid && <MovieComponent isEditing {...{title, year, genre, plot, poster}} />}
         </div>
     )
 };

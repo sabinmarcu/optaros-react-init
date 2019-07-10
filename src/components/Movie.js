@@ -38,16 +38,16 @@ export const MovieComponent = ({
         subheader={`${year} - ${genre}`}
         action={!isEditing && <div>
             <IconButton onClick={
+              () => history.push(`/edit/${id}`)
+            }>
+              <MoreVert />
+            </IconButton>
+            <IconButton onClick={
               () => confirm(`${t("Are you sure")}?`) && dispatch(
                 Actions.REMOVE(id)
               )
             }>
               <Clear />
-            </IconButton>
-            <IconButton onClick={
-              () => history.push(`/edit/${id}`)
-            }>
-              <MoreVert />
             </IconButton>
           </div>}
       />}
