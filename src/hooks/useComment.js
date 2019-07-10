@@ -16,16 +16,21 @@ export const useValid = value => {
 
 export const useComment = (comment, onSave) => {
   const [ownComment, setOwnComment] = useState(comment);
-
-  const resetComment = () => setOwnComment('');
-  const saveComment = () => {
-    onSave(ownComment);
-    resetComment();
-  }
-  const deleteComment = () => onSave('');
-
-  const eventHandler = ({ target: { value }}) =>
-    setOwnComment(value);
+  
+  const [handlers, setHandlers] = useState({});
+  useEffect(
+    () => setHandlers({
+      resetComment: () => setOwnComment(''),
+      saveComment() {
+        onSave(ownComment);
+        setOwnComment('');
+      },
+      deleteComment: () => onSave(''),
+      eventHandler: ({ target: { value } }) =>
+        setOwnComment(value)
+    }),
+    [ownComment, onSave],
+  )
 
   const commentValid = useValid(comment);
   const ownCommentValid = useValid(ownComment);
@@ -34,9 +39,6 @@ export const useComment = (comment, onSave) => {
     commentValid,
     ownCommentValid,
     ownComment,
-    saveComment,
-    deleteComment,
-    resetComment,
-    eventHandler,
+    ...handlers,
   }
 }
