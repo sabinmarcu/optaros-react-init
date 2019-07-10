@@ -5,19 +5,22 @@ import {
   CardMedia,
   CardContent,
 } from '@material-ui/core';
+import { useSelector } from 'react-redux';
 import CommentForm from './Comment';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useLanguage } from '../hooks/useLanguage';
+import { Selectors } from '../redux/movies';
 
 const MovieComponent = ({
-  id,
-  title,
-  year,
-  genre,
-  plot,
-  poster,
+  id, 
 }) => {
   const [comment, setComment] = useLocalStorage(id, '');
+  const { title,
+    year,
+    genre,
+    plot,
+    poster,
+  } = useSelector(Selectors.movie(id))
   const t = useLanguage();
   return (
     <Card>

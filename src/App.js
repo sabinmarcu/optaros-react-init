@@ -7,6 +7,8 @@ import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import theme from './data/theme';
 import { Button } from '@material-ui/core';
 import { useLanguage, useLanguageProvider } from './hooks/useLanguage';
+import { Provider } from 'react-redux';
+import store from './redux';
 
 const Title = () => {
   const t = useLanguage();
@@ -37,29 +39,31 @@ const App = () => {
   const [language, LanguageProvider, setLanguage] = useLanguageProvider();
     return (
     <div className="app">
-      <LanguageProvider>
-          <ThemeProvider theme={theme}>
-            <AppBar position="static" color="primary">
-              <Toolbar style={{ justifyContent: "space-between" }}>
-                <Title />
-                <Typography>
-                  <LanguageButton 
-                    {...{language, setLanguage}}
-                    value="en_US"
-                    text="English"
-                  /> 
-                    /
-                  <LanguageButton
-                    {...{ language, setLanguage }}
-                    value="ro_RO"
-                    text="Romanian"
-                  /> 
-                </Typography>
-              </Toolbar>
-            </AppBar>
-            <MoviesList />
-          </ThemeProvider>
-      </LanguageProvider>
+      <Provider store={store}>
+        <LanguageProvider>
+            <ThemeProvider theme={theme}>
+              <AppBar position="static" color="primary">
+                <Toolbar style={{ justifyContent: "space-between" }}>
+                  <Title />
+                  <Typography>
+                    <LanguageButton 
+                      {...{language, setLanguage}}
+                      value="en_US"
+                      text="English"
+                    /> 
+                      /
+                    <LanguageButton
+                      {...{ language, setLanguage }}
+                      value="ro_RO"
+                      text="Romanian"
+                    /> 
+                  </Typography>
+                </Toolbar>
+              </AppBar>
+              <MoviesList />
+            </ThemeProvider>
+        </LanguageProvider>
+      </Provider> 
     </div>
   );
 }
