@@ -15,7 +15,7 @@ export const useValid = value => {
 }
 
 export const useComment = (comment, onSave) => {
-  const [ownComment, setOwnComment] = useState(comment);
+  const [ownComment, setOwnComment] = useState('');
   
   const [handlers, setHandlers] = useState({});
   useEffect(

@@ -28,7 +28,7 @@ const CommentForm = ({
         onChange={eventHandler}
       />
       {ownCommentValid &&
-        <Button onClick={saveComment}>
+        <Button onClick={saveComment} color="primary" variant="contained">
           {commentValid
             ? 'Update'
             : 'Add Comment'
@@ -36,12 +36,12 @@ const CommentForm = ({
         </Button>
       }
       {ownCommentValid &&
-        <Button onClick={resetComment}>
+        <Button onClick={resetComment} color="secondary" variant="outlined">
           Reset
         </Button>
       }
       {commentValid &&
-        <Button onClick={deleteComment}>
+        <Button onClick={deleteComment} color="secondary">
           Delete Comment
         </Button>
       }
