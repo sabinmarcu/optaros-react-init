@@ -15,7 +15,7 @@ import {
   Link, 
 } from "react-router-dom";
 import HomeRoute from './routes/home';
-import FormRoute from './routes/form';
+import FormRoute, { ReduxFormRoute } from './routes/form';
 
 const BrowserButton = ({ to, ...rest }) => (
   <Link to={to}>
@@ -78,6 +78,7 @@ const App = () => {
                 </AppBar>
                 <Route exact path="/" component={HomeRoute} />
                 <Route exact path="/add" component={FormRoute} />
+                <Route exact path="/edit/:id" component={ReduxFormRoute} />
               </Router>
             </ThemeProvider>
         </LanguageProvider>

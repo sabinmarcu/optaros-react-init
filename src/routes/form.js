@@ -11,8 +11,8 @@ import { MovieComponent } from '../components/Movie';
 import { useLanguage } from '../hooks/useLanguage';
 import useField from '../hooks/useField';
 import styles from './style.module.css';
-import { useDispatch } from 'react-redux';
-import { Actions } from '../redux/movies';
+import { useDispatch, useSelector } from 'react-redux';
+import { Actions, Selectors } from '../redux/movies';
 
 const useForm = (initData = {}) => {
     const [title, titleIsValid, setTitle] = useField(initData.title, value => value.trim().split(' ').length >= 3);
@@ -47,7 +47,8 @@ const useForm = (initData = {}) => {
 }
 
 const MovieForm = ({
-    history: { push }
+    history: { push },
+    data,
 }) => {
     const t = useLanguage();
     const {
@@ -57,7 +58,7 @@ const MovieForm = ({
         plot, plotIsValid, setPlot,
         poster, posterIsValid, setPoster,
         isPartialValid, isValid,
-    } = useForm();
+    } = useForm(data);
     const dispatch = useDispatch();
     return (
         <div className={styles.formContainer}>
@@ -108,13 +109,25 @@ const MovieForm = ({
                         variant="contained"
                         onClick={() => {
                             dispatch(
-                                Actions.ADD({
-                                    title,
-                                    genre,
-                                    year,
-                                    poster,
-                                    plot,
-                                })
+                                data 
+                                    ? Actions.UPDATE(
+                                        data.id,
+                                        {
+                                            title,
+                                            genre,
+                                            year,
+                                            poster,
+                                            plot,
+                                        }
+                                    )
+
+                                    : Actions.ADD({
+                                        title,
+                                        genre,
+                                        year,
+                                        poster,
+                                        plot,
+                                    })
                             );
                             push("/");
                         }}
@@ -129,3 +142,7 @@ const MovieForm = ({
 };
 
 export default MovieForm;
+export const ReduxFormRoute = ({ history, match: { params: { id }} }) => {
+    const data = useSelector(Selectors.movie(id));
+    return <MovieForm {...{history, data}} />
+}

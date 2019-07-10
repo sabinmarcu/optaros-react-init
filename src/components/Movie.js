@@ -14,8 +14,10 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { useLanguage } from '../hooks/useLanguage';
 import { Selectors } from '../redux/movies';
 import Clear from '@material-ui/icons/Clear';
+import MoreVert from '@material-ui/icons/MoreVert';
 import { useDispatch } from 'react-redux';
 import { Actions } from '../redux/movies';
+import useReactRouter from 'use-react-router';
 
 export const MovieComponent = ({
   id, title,
@@ -28,18 +30,26 @@ export const MovieComponent = ({
   const [comment, setComment] = useLocalStorage(id, '');
   const t = useLanguage();
   const dispatch = useDispatch();
+  const { history } = useReactRouter();
   return (
     <Card>
       {(title || year || genre) && <CardHeader
         title={title}
         subheader={`${year} - ${genre}`}
-        action={!isEditing && <IconButton onClick={
-          () => confirm(`${t("Are you sure")}?`) && dispatch(
-            Actions.REMOVE(id)
-          )
-        }>
-          <Clear />
-        </IconButton>}
+        action={!isEditing && <div>
+            <IconButton onClick={
+              () => confirm(`${t("Are you sure")}?`) && dispatch(
+                Actions.REMOVE(id)
+              )
+            }>
+              <Clear />
+            </IconButton>
+            <IconButton onClick={
+              () => history.push(`/edit/${id}`)
+            }>
+              <MoreVert />
+            </IconButton>
+          </div>}
       />}
       {poster && <CardMedia
         title={title}
