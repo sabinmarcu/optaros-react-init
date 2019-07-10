@@ -36,7 +36,7 @@ export const Reducer = (
     { ids, movies }, 
     { type, payload }
 ) => {
-    if (payload) {
+    if (payload && typeof(payload) === "object") {
         payload.id = payload.id || ids.sort()[ids.length - 1] + 1; 
     }
     switch (type) {
@@ -46,10 +46,13 @@ export const Reducer = (
                 ids: [ ...ids, payload.id ],
             };
         case Types.REMOVE:
-            const newIds = [...ids].filter(it => it !== payload.id)
+            const newIds = [...ids].filter(it => it !== payload)
             return {
                 ids: newIds,
-                movies: newIds.map(id => movies[id]),
+                movies: newIds.reduce((prev, id) => ({
+                    ...prev,
+                    [id]: movies[id]
+                }), {}),
             };
         case Types.UPDATE: 
             return {

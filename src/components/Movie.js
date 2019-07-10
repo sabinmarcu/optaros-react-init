@@ -1,15 +1,21 @@
+/* eslint-disable no-restricted-globals */
+
 import React from 'react';
 import {
   Card,
   CardHeader,
   CardMedia,
   CardContent,
+  IconButton,
 } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import CommentForm from './Comment';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useLanguage } from '../hooks/useLanguage';
 import { Selectors } from '../redux/movies';
+import Clear from '@material-ui/icons/Clear';
+import { useDispatch } from 'react-redux';
+import { Actions } from '../redux/movies';
 
 export const MovieComponent = ({
   id, title,
@@ -17,15 +23,23 @@ export const MovieComponent = ({
   genre,
   plot,
   poster,
-  displayComment,
+  isEditing,
 }) => {
   const [comment, setComment] = useLocalStorage(id, '');
   const t = useLanguage();
+  const dispatch = useDispatch();
   return (
     <Card>
       {(title || year || genre) && <CardHeader
         title={title}
         subheader={`${year} - ${genre}`}
+        action={!isEditing && <IconButton onClick={
+          () => confirm(`${t("Are you sure")}?`) && dispatch(
+            Actions.REMOVE(id)
+          )
+        }>
+          <Clear />
+        </IconButton>}
       />}
       {poster && <CardMedia
         title={title}
@@ -38,14 +52,14 @@ export const MovieComponent = ({
       {comment && comment.length > 0 && <CardContent>
         {t("Your comment is")}: {comment}
       </CardContent>}
-      {displayComment && <CommentForm comment={comment} onSave={setComment} />}
+      {!isEditing && <CommentForm comment={comment} onSave={setComment} />}
     </Card>
   );
 }
 
 const ReduxMovieComponentWrapper = ({ id }) => {
   const movieData = useSelector(Selectors.movie(id))
-  return (<MovieComponent displayComment {...{ id, ...movieData }} />)
+  return (<MovieComponent {...{ id, ...movieData }} />)
 };
 
 export default ReduxMovieComponentWrapper;
