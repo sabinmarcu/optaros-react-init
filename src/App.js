@@ -2,7 +2,6 @@ import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import MoviesList from './components/MovieList';
 import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import theme from './data/theme';
 import { Button } from '@material-ui/core';
@@ -10,11 +9,27 @@ import { useLanguage, useLanguageProvider } from './hooks/useLanguage';
 import { Provider } from 'react-redux';
 import store from './redux';
 
+import { 
+  BrowserRouter as Router, 
+  Route,
+  Link, 
+} from "react-router-dom";
+import HomeRoute from './routes/home';
+import FormRoute from './routes/form';
+
+const BrowserButton = ({ to, ...rest }) => (
+  <Link to={to}>
+    <Button {...rest} />
+  </Link>
+)
+
 const Title = () => {
   const t = useLanguage();
   return (
     <Typography variant="h6" color="inherit">
-      {t('Movies App')}
+      <BrowserButton to="/">{t("Home")}</BrowserButton>
+      /
+      <BrowserButton to="/add">{t("Add")}</BrowserButton>
     </Typography>
   );
 }
@@ -42,25 +57,28 @@ const App = () => {
       <Provider store={store}>
         <LanguageProvider>
             <ThemeProvider theme={theme}>
-              <AppBar position="static" color="primary">
-                <Toolbar style={{ justifyContent: "space-between" }}>
-                  <Title />
-                  <Typography>
-                    <LanguageButton 
-                      {...{language, setLanguage}}
-                      value="en_US"
-                      text="English"
-                    /> 
-                      /
-                    <LanguageButton
-                      {...{ language, setLanguage }}
-                      value="ro_RO"
-                      text="Romanian"
-                    /> 
-                  </Typography>
-                </Toolbar>
-              </AppBar>
-              <MoviesList />
+              <Router>
+                <AppBar position="static" color="primary">
+                  <Toolbar style={{ justifyContent: "space-between" }}>
+                    <Title />
+                    <Typography>
+                      <LanguageButton 
+                        {...{language, setLanguage}}
+                        value="en_US"
+                        text="English"
+                      /> 
+                        /
+                      <LanguageButton
+                        {...{ language, setLanguage }}
+                        value="ro_RO"
+                        text="Romanian"
+                      /> 
+                    </Typography>
+                  </Toolbar>
+                </AppBar>
+                <Route exact path="/" component={HomeRoute} />
+                <Route exact path="/add" component={FormRoute} />
+              </Router>
             </ThemeProvider>
         </LanguageProvider>
       </Provider> 

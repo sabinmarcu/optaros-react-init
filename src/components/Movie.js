@@ -11,37 +11,41 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { useLanguage } from '../hooks/useLanguage';
 import { Selectors } from '../redux/movies';
 
-const MovieComponent = ({
-  id, 
+export const MovieComponent = ({
+  id, title,
+  year,
+  genre,
+  plot,
+  poster,
+  displayComment,
 }) => {
   const [comment, setComment] = useLocalStorage(id, '');
-  const { title,
-    year,
-    genre,
-    plot,
-    poster,
-  } = useSelector(Selectors.movie(id))
   const t = useLanguage();
   return (
     <Card>
-      <CardHeader
+      {(title || year || genre) && <CardHeader
         title={title}
         subheader={`${year} - ${genre}`}
-      />
-      <CardMedia
+      />}
+      {poster && <CardMedia
         title={title}
         style={{ height: 50 * 6 }}
         image={poster}
-      />
-      <CardContent>
+      />}
+      {plot && <CardContent>
         {plot}
-      </CardContent>
+      </CardContent>}
       {comment && comment.length > 0 && <CardContent>
         {t("Your comment is")}: {comment}
       </CardContent>}
-      <CommentForm comment={comment} onSave={setComment} />
+      {displayComment && <CommentForm comment={comment} onSave={setComment} />}
     </Card>
   );
 }
 
-export default MovieComponent;
+const ReduxMovieComponentWrapper = ({ id }) => {
+  const movieData = useSelector(Selectors.movie(id))
+  return (<MovieComponent displayComment {...{ id, ...movieData }} />)
+};
+
+export default ReduxMovieComponentWrapper;

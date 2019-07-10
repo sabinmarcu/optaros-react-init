@@ -1,12 +1,6 @@
-import data from '../data/movies.json';
+import { hydrate } from './persist';
 
-export const InitialState = {
-    ids: data.movies.map(({ id }) => id),
-    movies: data.movies.reduce((prev, { id, ...rest }) => ({
-        ...prev,
-        [id]: { id, ...rest },
-    }), {}),
-};
+export const InitialState = hydrate();
 
 const prefix = "movies/";
 export const Types = [
@@ -19,15 +13,15 @@ export const Types = [
 }), {});
 
 export const Actions = {
-    [Types.ADD]: data => ({
+    ADD: data => ({
         type: Types.ADD,
         payload: data,
     }),
-    [Types.REMOVE]: id => ({
+    REMOVE: id => ({
         type: Types.REMOVE,
         payload: id,
     }),
-    [Types.UPDATE]: (id, data) => ({
+    UPDATE: (id, data) => ({
         type: Types.UPDATE,
         payload: { id, data },
     }),
@@ -42,6 +36,9 @@ export const Reducer = (
     { ids, movies }, 
     { type, payload }
 ) => {
+    if (payload) {
+        payload.id = payload.id || ids.sort()[ids.length - 1] + 1; 
+    }
     switch (type) {
         case Types.ADD: 
             return {

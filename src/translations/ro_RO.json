@@ -1,9 +1,16 @@
 {
-    "Movies App": "Aplicatie de Filme",
+    "Home": "Acasa",
+    "Add": "Adauga",
+    "Title": "Titlu",
+    "Year": "An",
+    "Genre": "Gen",
+    "Plot": "Descriere",
     "Your Comment": "Comentariul Tau",
     "Add Comment": "Adauga Comentariu",
     "Update": "Modifica",
     "Reset": "Reseteaza",
+    "Save": "Salveaza",
     "Delete Comment": "Sterge Comentariul",
-    "Your comment is": "Comentariul tau este"
+    "Your comment is": "Comentariul tau este",
+    "Add a movie": "Adauga un film nou"
 }
