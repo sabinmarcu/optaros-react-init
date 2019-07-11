@@ -15,6 +15,9 @@ import {
   useLanguageProvider 
 } from './hooks/useLanguage';
 
+import { Provider as ReduxProvider } from 'react-redux';
+import store from './redux';
+
 const Title = () => {
   const t = useLanguage();
   return (
@@ -42,28 +45,30 @@ const App = () => {
   const [language, setLanguage, LanguageProvider] = useLanguageProvider();
   return (
     <div className="app">
-      <ThemeProvider theme={theme}>
-        <LanguageProvider>
-          <AppBar position="static" color="primary">
-            <Toolbar style={{ justifyContent: 'space-between' }}>
-              <Title />
-              <div>
-                <LanguageButton 
-                  value="en_US"
-                  text="English"
-                  {...{ language, setLanguage }}
-                />
-                <LanguageButton
-                  value="ro_RO"
-                  text="Romanian"
-                  {...{ language, setLanguage }}
-                />
-              </div>
-            </Toolbar>
-          </AppBar>
-          <MoviesList />
-        </LanguageProvider>
-      </ThemeProvider>
+      <ReduxProvider store={store}>
+        <ThemeProvider theme={theme}>
+          <LanguageProvider>
+            <AppBar position="static" color="primary">
+              <Toolbar style={{ justifyContent: 'space-between' }}>
+                <Title />
+                <div>
+                  <LanguageButton 
+                    value="en_US"
+                    text="English"
+                    {...{ language, setLanguage }}
+                  />
+                  <LanguageButton
+                    value="ro_RO"
+                    text="Romanian"
+                    {...{ language, setLanguage }}
+                  />
+                </div>
+              </Toolbar>
+            </AppBar>
+            <MoviesList />
+          </LanguageProvider>
+        </ThemeProvider>
+      </ReduxProvider>
     </div>
   );
 }
