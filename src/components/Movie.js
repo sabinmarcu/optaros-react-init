@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core';
 import CommentForm from './Comment';
 import useLocalStorage from '../hooks/useLocalStorage';
+import { useLanguage } from '../hooks/useLanguage';
 
 const MovieComponent = ({
   id,
@@ -17,6 +18,7 @@ const MovieComponent = ({
   poster,
 }) => {
   const [comment, setComment] = useLocalStorage(id, '');
+  const t = useLanguage();
   return (
     <Card>
       <CardHeader
@@ -32,7 +34,7 @@ const MovieComponent = ({
         {plot}
       </CardContent>
       {comment && comment.length > 0 && <CardContent>
-        Your comment is: {comment}
+        {t('Your comment is')}: {comment}
       </CardContent>}
       <CommentForm comment={comment} onSave={setComment} />
     </Card>
