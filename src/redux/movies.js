@@ -1,15 +1,26 @@
 import data from '../data/movies.json';
+import { hydrate } from './middleware';
 
-export const InitialState = {
-  ids: data.movies.map(({ id }) => id),
-  movies: data.movies.reduce(
-    (prev, movie) => ({
-      ...prev,
-      [movie.id]: movie,
-    }),
-    {},
-  ),
-};
+const localStorageData = hydrate();
+
+export const Key = 'movies';
+
+export const InitialState = 
+  localStorageData && localStorageData[Key]
+  ? { 
+    ids: localStorageData[Key].ids,
+    movies: localStorageData[Key].movies,
+  } 
+  : {
+    ids: data.movies.map(({ id }) => id),
+    movies: data.movies.reduce(
+      (prev, movie) => ({
+        ...prev,
+        [movie.id]: movie,
+      }),
+      {},
+    ),
+  };
 
 const prefix = 'movies/';
 export const Types = [
@@ -42,7 +53,7 @@ export const Actions = {
 };
 
 export const Reducer = (
-  { ids, movies },
+  { ids, movies } = InitialState,
   { type, payload },
 ) => {
   if (payload && typeof(payload) === 'object') {
@@ -86,8 +97,8 @@ export const Reducer = (
 }
 
 export const Selectors = {
-  ids: ({ ids }) => ids,
-  movie: id => ({ movies }) => movies[id],
+  ids: ({ [Key]: { ids } }) => ids,
+  movie: id => ({ [Key] : { movies } }) => movies[id],
 };
 
 // payload { id, data }
