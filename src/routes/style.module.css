@@ -1,0 +1,9 @@
+.formContainer {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.formContainer > * {
+    flex: 1;
+    margin: 10px 5px;
+} 

@@ -18,44 +18,46 @@ import { useLanguage } from '../hooks/useLanguage';
 import { useSelector, useDispatch } from 'react-redux';
 import { Selectors, Actions } from '../redux/movies';
 
-const MovieComponent = ({
+export const MovieComponent = ({
   id,
+  title,
+  year,
+  genre,
+  plot,
+  poster,
+  isPreview,
 }) => {
   const [comment, setComment] = useLocalStorage(id, '');
   const t = useLanguage();
-  const {
-    title,
-    year,
-    genre,
-    plot,
-    poster,
-  } = useSelector(Selectors.movie(id));
   const dispatch = useDispatch();
   return (
     <Card>
-      <CardHeader
+      {(title || year || genre) && <CardHeader
         title={title}
         subheader={`${year} - ${genre}`}
-        action={(
+        action={!isPreview && (
           <IconButton onClick={() => confirm("Are you sure?") && dispatch(Actions.REMOVE(id))}>
             <ClearIcon />
           </IconButton>
         )}
-      />
-      <CardMedia
+      />}
+      {poster && <CardMedia
         title={title}
         style={{ height: 50 * 6 }}
         image={poster}
-      />
-      <CardContent>
+      />}
+      {plot && <CardContent>
         {plot}
-      </CardContent>
-      {comment && comment.length > 0 && <CardContent>
+      </CardContent>}
+      {!isPreview && comment && comment.length > 0 && <CardContent>
         {t('Your comment is')}: {comment}
       </CardContent>}
-      <CommentForm comment={comment} onSave={setComment} />
+      {!isPreview && <CommentForm comment={comment} onSave={setComment} />}
     </Card>
   );
 }
 
-export default MovieComponent;
+export default ({ id }) => {
+  const data = useSelector(Selectors.movie(id));
+  return (<MovieComponent {...{id, ...data}} />);
+};

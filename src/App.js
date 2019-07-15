@@ -4,6 +4,13 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import MoviesList from './components/MovieList';
 
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Link,
+} from "react-router-dom";
+
 import ThemeProvider from '@material-ui/styles/ThemeProvider';
 import theme from './data/theme';
 import {
@@ -18,12 +25,22 @@ import {
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './redux';
 
+import FormRoute from './routes/form';
+
+
+const LinkButton = ({ to, ...rest }) => (
+  <Link to={to}>
+    <Button {...rest} />
+  </Link>
+);
+
 const Title = () => {
   const t = useLanguage();
   return (
-    <Typography variant="h6" color="inherit">
-      {t("Movies App")}
-    </Typography>
+    <div>
+      <LinkButton to="/">{t("Home")}</LinkButton>
+      <LinkButton to="/add">{t("Add")}</LinkButton>
+    </div>
   );
 }
 
@@ -48,24 +65,30 @@ const App = () => {
       <ReduxProvider store={store}>
         <ThemeProvider theme={theme}>
           <LanguageProvider>
-            <AppBar position="static" color="primary">
-              <Toolbar style={{ justifyContent: 'space-between' }}>
-                <Title />
-                <div>
-                  <LanguageButton 
-                    value="en_US"
-                    text="English"
-                    {...{ language, setLanguage }}
-                  />
-                  <LanguageButton
-                    value="ro_RO"
-                    text="Romanian"
-                    {...{ language, setLanguage }}
-                  />
-                </div>
-              </Toolbar>
-            </AppBar>
-            <MoviesList />
+            <Router>
+              <AppBar position="static" color="primary">
+                <Toolbar style={{ justifyContent: 'space-between' }}>
+                  <Title />
+                  <div>
+                    <LanguageButton 
+                      value="en_US"
+                      text="English"
+                      {...{ language, setLanguage }}
+                    />
+                    <LanguageButton
+                      value="ro_RO"
+                      text="Romanian"
+                      {...{ language, setLanguage }}
+                    />
+                  </div>
+                </Toolbar>
+              </AppBar>
+              <Switch>
+                <Route exact path="/" component={MoviesList} />
+                <Route exact path="/add" component={FormRoute} />
+                <Route path="/" component={() => <h1>404</h1>} />
+              </Switch>
+            </Router>
           </LanguageProvider>
         </ThemeProvider>
       </ReduxProvider>
