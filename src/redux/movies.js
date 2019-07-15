@@ -1,9 +1,19 @@
-import data from '../data/movies.json';
 import { hydrate } from './middleware';
 
 const localStorageData = hydrate();
 
 export const Key = 'movies';
+
+const parseData = data => ({
+  ids: data.map(({ id }) => id),
+  list: data.reduce(
+    (prev, movie) => ({
+      ...prev,
+      [movie.id]: movie,
+    }),
+    {},
+  ),
+});
 
 export const InitialState = 
   localStorageData && localStorageData[Key]
@@ -12,14 +22,8 @@ export const InitialState =
     list: localStorageData[Key].list,
   } 
   : {
-    ids: data.movies.map(({ id }) => id),
-    list: data.movies.reduce(
-      (prev, movie) => ({
-        ...prev,
-        [movie.id]: movie,
-      }),
-      {},
-    ),
+    ids: [],
+    list: {},
   };
 
 const prefix = 'movies/';
@@ -27,6 +31,7 @@ export const Types = [
   'ADD',
   'UPDATE',
   'REMOVE',
+  'INIT',
 ].reduce(
   (prev, action) => ({
     ...prev,
@@ -48,6 +53,10 @@ export const Actions = {
     type: Types.UPDATE,
     payload: { id, data },
   }),
+  INIT: data => ({
+    type: Types.INIT,
+    payload: data,
+  }),
 };
 
 export const Reducer = (
@@ -67,6 +76,9 @@ export const Reducer = (
         },
       };
     case Types.REMOVE:
+      fetch(`http://localhost:8000/movies/${payload}`, {
+        method: "DELETE",
+      });
       const newIds = [...ids].filter((id) => id !== payload);
       return {
         ids: newIds,
@@ -79,16 +91,27 @@ export const Reducer = (
         ),
       }
     case Types.UPDATE:
+      const updatedObject = {
+        ...list[payload.id],
+        ...payload.data
+      };
+      fetch(`http://localhost:8000/movies/${payload.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(updatedObject),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        }
+      });
       return {
         ids,
         list: { 
           ...list,
-          [payload.id]: {
-            ...list[payload.id], 
-            ...payload.data
-          }
+          [payload.id]: updatedObject,
         }
       };
+    case Types.INIT:
+      return parseData(payload);
     default: 
       return { ids, list };
   }

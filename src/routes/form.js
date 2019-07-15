@@ -125,9 +125,8 @@ const MovieForm = ({
             color="primary" 
             variant="contained"
             onClick={() => {
-              dispatch(
-                id 
-                  ? Actions.UPDATE(
+              id 
+                ? dispatch(Actions.UPDATE(
                     id,
                     {
                       title: titleValue,
@@ -137,13 +136,25 @@ const MovieForm = ({
                       poster: posterValue,
                     }
                   ) 
-                  : Actions.ADD({
+                )
+                : fetch('http://localhost:8000/movies', {
+                  method: 'POST',
+                  body: JSON.stringify({
                     title: titleValue,
                     genre: genreValue,
                     year: yearValue,
                     plot: plotValue,
                     poster: posterValue,
-                  }));
+                  }),
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                  }
+                })
+                  .then(res => res.json())
+                  .then((data) =>
+                    dispatch(Actions.ADD(data))
+                  );
               push('/');
             }}
           >

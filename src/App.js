@@ -28,7 +28,6 @@ import store from './redux';
 import FormRoute, { ReduxMovieForm } from './routes/form';
 import Logger from './routes/logs';
 
-
 const LinkButton = ({ to, ...rest }) => (
   <Link to={to}>
     <Button {...rest} />
@@ -60,7 +59,7 @@ const LanguageButton = ({
 );
 
 const App = () => {
-  const [language, setLanguage, LanguageProvider] = useLanguageProvider();
+  const [language, setLanguage, LanguageProvider] = useLanguageProvider();  
   return (
     <div className="app">
       <ReduxProvider store={store}>
