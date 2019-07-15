@@ -14,15 +14,15 @@ import { MovieComponent } from '../components/Movie';
 
 import styles from './style.module.css';
 
-import { useDispatch } from 'react-redux';
-import { Actions } from '../redux/movies';
+import { useDispatch, useSelector } from 'react-redux';
+import { Actions, Selectors } from '../redux/movies';
 
 const useForm = (initData = {}) => {
   const [titleValue, titleValid, titleSetter] = useField(initData.title);
   const [genreValue, genreValid, genreSetter] = useField(initData.genre);
   const [yearValue, yearValid, yearSetter] = useField(initData.year);
   const [plotValue, plotValid, plotSetter] = useField(
-    initData.plot, 
+    initData.plot,
     plot => plot.trim().split(" ").length > 4,
   );
   const [posterValue, posterValid, posterSetter] = useField(initData.poster);
@@ -62,6 +62,8 @@ const MovieForm = ({
   history: {
     push,
   },
+  data = {},
+  id,
 }) => {
   const {
     titleValue, titleValid, titleSetter,
@@ -70,7 +72,7 @@ const MovieForm = ({
     plotValue, plotValid, plotSetter,
     posterValue, posterValid, posterSetter,
     isPartialValid, isValid,
-  } = useForm();
+  } = useForm(data);
   const dispatch = useDispatch();
   return (
     <div className={styles.formContainer}>
@@ -123,13 +125,25 @@ const MovieForm = ({
             color="primary" 
             variant="contained"
             onClick={() => {
-              dispatch(Actions.ADD({
-                title: titleValue,
-                genre: genreValue,
-                year: yearValue,
-                plot: plotValue,
-                poster: posterValue,
-              }));
+              dispatch(
+                id 
+                  ? Actions.UPDATE(
+                    id,
+                    {
+                      title: titleValue,
+                      genre: genreValue,
+                      year: yearValue,
+                      plot: plotValue,
+                      poster: posterValue,
+                    }
+                  ) 
+                  : Actions.ADD({
+                    title: titleValue,
+                    genre: genreValue,
+                    year: yearValue,
+                    plot: plotValue,
+                    poster: posterValue,
+                  }));
               push('/');
             }}
           >
@@ -150,3 +164,10 @@ const MovieForm = ({
 };
 
 export default MovieForm;
+export const ReduxMovieForm = ({ 
+  match: { params: { id } }, 
+  history  
+}) => {
+  const data = useSelector(Selectors.movie(id));
+  return (<MovieForm {...{ data, id, history }} />)
+};

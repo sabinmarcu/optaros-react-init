@@ -25,7 +25,7 @@ import {
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './redux';
 
-import FormRoute from './routes/form';
+import FormRoute, { ReduxMovieForm } from './routes/form';
 
 
 const LinkButton = ({ to, ...rest }) => (
@@ -86,6 +86,7 @@ const App = () => {
               <Switch>
                 <Route exact path="/" component={MoviesList} />
                 <Route exact path="/add" component={FormRoute} />
+                <Route exact path="/edit/:id" component={ReduxMovieForm} />
                 <Route path="/" component={() => <h1>404</h1>} />
               </Switch>
             </Router>
