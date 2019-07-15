@@ -9,11 +9,11 @@ export const InitialState =
   localStorageData && localStorageData[Key]
   ? { 
     ids: localStorageData[Key].ids,
-    movies: localStorageData[Key].movies,
+    list: localStorageData[Key].list,
   } 
   : {
     ids: data.movies.map(({ id }) => id),
-    movies: data.movies.reduce(
+    list: data.movies.reduce(
       (prev, movie) => ({
         ...prev,
         [movie.id]: movie,
@@ -35,8 +35,6 @@ export const Types = [
   {},
 );
 
-console.log(Types);
-
 export const Actions = {
   ADD: data => ({
     type: Types.ADD,
@@ -53,7 +51,7 @@ export const Actions = {
 };
 
 export const Reducer = (
-  { ids, movies } = InitialState,
+  { ids, list } = InitialState,
   { type, payload },
 ) => {
   if (payload && typeof(payload) === 'object') {
@@ -63,8 +61,8 @@ export const Reducer = (
     case Types.ADD: 
       return {
         ids: [...ids, payload.id],
-        movies: {
-          ...movies,
+        list: {
+          ...list,
           [payload.id]: payload,
         },
       };
@@ -72,10 +70,10 @@ export const Reducer = (
       const newIds = [...ids].filter((id) => id !== payload);
       return {
         ids: newIds,
-        movies: newIds.reduce(
+        list: newIds.reduce(
           (prev, movieId) => ({
             ...prev,
-            [movieId]: movies[movieId],
+            [movieId]: list[movieId],
           }),
           {},
         ),
@@ -83,22 +81,22 @@ export const Reducer = (
     case Types.UPDATE:
       return {
         ids,
-        movies: { 
-          ...movies,
+        list: { 
+          ...list,
           [payload.id]: {
-            ...movies[payload.id], 
+            ...list[payload.id], 
             ...payload.data
           }
         }
       };
     default: 
-      return { ids, movies };
+      return { ids, list };
   }
 }
 
 export const Selectors = {
-  ids: ({ [Key]: { ids } }) => ids,
-  movie: id => ({ [Key] : { movies } }) => movies[id],
+  ids: ({ [Key]: { ids }}) => ids,
+  movie: id => ({ [Key]: { list } }) => list[id],
 };
 
 // payload { id, data }

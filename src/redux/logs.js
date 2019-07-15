@@ -5,15 +5,18 @@ const localStorageData = hydrate();
 export const Key = 'logs'
 
 export const InitialState = localStorageData && localStorageData[Key]
-  ? { logs: localStorageData[Key].logs }
-  : { logs: [] };
+  ? { list: localStorageData[Key].list }
+  : { list: [] };
 
-export const Reducer = ({ logs } = InitialState, { type, payload }) => {
+export const Reducer = (
+  { list } = InitialState, 
+  { type, payload }
+) => {
   return { 
-    logs: [...logs, `${type}: ${JSON.stringify(payload)}`],
+    list: [...list, `${type}: ${JSON.stringify(payload)}`],
   };
 };
 
 export const Selectors = {
-  all: ({ [Key]: { logs } }) => logs,
+  all: ({ [Key]: { list } }) => list,
 };
